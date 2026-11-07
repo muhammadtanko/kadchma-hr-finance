@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "kadchma-frontend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "kadchma-frontend",
+      "port": 5173,
+      "url": "http://localhost:5173"
+    },
+    {
+      "name": "kadchma-backend",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "kadchma-backend",
+      "port": 5001
+    }
+  ]
+}
