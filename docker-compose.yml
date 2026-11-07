@@ -18,11 +18,14 @@ services:
       CLOUDFLARE_ACCOUNT_ID: ${CLOUDFLARE_ACCOUNT_ID}
       CLOUDFLARE_DOMAIN: ${CLOUDFLARE_DOMAIN}
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      test: ["CMD", "wget", "-qO-", "http://localhost:5001/health"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
+    networks:
+      - kadchma-internal
+      - dokploy-network
 
   # ── Frontend (production build served by nginx) ─────────────────────────────
   frontend:
@@ -34,4 +37,14 @@ services:
     ports:
       - "4006:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    networks:
+      - kadchma-internal
+      - dokploy-network
+
+networks:
+  kadchma-internal:
+    driver: bridge
+  dokploy-network:
+    external: true

@@ -26,6 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_, res) => res.json({ ok: true, message: "KADCHMA Backend API v1" }));
+app.get("/health", (_, res) => res.json({ ok: true }));
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/leave", leaveRoutes);
