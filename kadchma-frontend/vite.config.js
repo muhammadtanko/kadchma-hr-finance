@@ -6,9 +6,7 @@ import { defineConfig } from 'vite'
 const EMBED_FRAME_ORIGINS = [
   "'self'",
   'http://localhost:3000',
-  'https://kadchmahr.vercel.app',
-  'https://kadchmaportal.com',
-  'https://www.kadchmaportal.com',
+  'https://kadchma.monflex.com.ng',
 ].join(' ');
 
 export default defineConfig({
