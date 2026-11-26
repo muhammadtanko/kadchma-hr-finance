@@ -153,7 +153,7 @@ export default function DashboardView({ data }) {
       <div className="phead">
         <div>
           <span className="overline">Overview</span>
-          <h1>Dashboard</h1>
+          <h1>Kadchma HR&amp;Finance Dashboard</h1>
         </div>
         <span className="small muted">Last updated: {new Date().toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
       </div>

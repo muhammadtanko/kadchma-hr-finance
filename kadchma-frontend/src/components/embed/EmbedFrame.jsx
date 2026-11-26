@@ -12,6 +12,10 @@ export function EmbedFrame({ children, onRefresh }) {
   const ref = useRef(null);
 
   useEffect(() => {
+    document.documentElement.setAttribute('data-theme', 'light');
+  }, []);
+
+  useEffect(() => {
     const el = ref.current;
     if (!el || window.parent === window) return;
     const post = () => {
