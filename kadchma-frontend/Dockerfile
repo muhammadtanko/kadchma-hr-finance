@@ -23,12 +23,13 @@ RUN printf 'server {\n\
     listen 80;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
+    resolver 127.0.0.11 valid=30s;\n\
     location / {\n\
         try_files $uri $uri/ /index.html;\n\
     }\n\
-    # Proxy API calls to the backend\n\
     location /api/ {\n\
-        proxy_pass http://backend:5001;\n\
+        set $backend http://backend:5001;\n\
+        proxy_pass $backend;\n\
         proxy_set_header Host $host;\n\
         proxy_set_header X-Real-IP $remote_addr;\n\
     }\n\
