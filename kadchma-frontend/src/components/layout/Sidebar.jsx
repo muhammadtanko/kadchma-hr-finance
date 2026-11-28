@@ -196,16 +196,15 @@ export default function Sidebar({ open, onClose }) {
       className={`side ${open ? 'side-open' : ''}`}
       aria-label="Main navigation"
     >
-      <span className="overline">Navigation</span>
+      {/* Scrollable nav area */}
+      <div className="side-scroll">
+        <span className="overline">Navigation</span>
+        {TOP_NAV.filter(canSee).map(renderItem)}
+        {GROUPS.map(renderGroup)}
+      </div>
 
-      {/* Standalone top items */}
-      {TOP_NAV.filter(canSee).map(renderItem)}
-
-      {/* Grouped sections */}
-      {GROUPS.map(renderGroup)}
-
-      {/* Standalone bottom items */}
-      <div style={{ marginTop: 'auto', paddingTop: 'var(--s3)', display: 'flex', flexDirection: 'column', gap: 2 }}>
+      {/* Pinned bottom — always visible */}
+      <div className="side-bottom">
         {BOTTOM_NAV.filter(canSee).map(renderItem)}
         <button
           type="button"
@@ -215,7 +214,7 @@ export default function Sidebar({ open, onClose }) {
             dispatch({ type: 'SET_ME', payload: null });
             dispatch({ type: 'SET_LOGGED_IN', payload: false });
           }}
-          style={{ color: 'var(--danger, #ef4444)', marginTop: 4 }}
+          style={{ color: 'var(--danger, #ef4444)' }}
         >
           <Icon name="logout" size={18} />
           Logout

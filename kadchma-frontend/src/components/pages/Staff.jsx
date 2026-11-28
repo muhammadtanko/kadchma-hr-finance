@@ -342,8 +342,29 @@ function EditStaffDialog({ staff, data, dispatch, onClose }) {
   const [section, setSection] = useState(0);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [pwSaving, setPwSaving] = useState(false);
+  const [pwError, setPwError] = useState('');
+  const [pwSuccess, setPwSuccess] = useState(false);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const changePassword = async () => {
+    setPwError(''); setPwSuccess(false);
+    if (newPassword.length < 6) { setPwError('Password must be at least 6 characters.'); return; }
+    if (newPassword !== confirmPassword) { setPwError('Passwords do not match.'); return; }
+    setPwSaving(true);
+    try {
+      await api.post('/users/reset-password', { email: form.email.trim(), newPassword });
+      setPwSuccess(true);
+      setNewPassword(''); setConfirmPassword('');
+    } catch (err) {
+      setPwError(err.message ?? 'Password change failed.');
+    } finally {
+      setPwSaving(false);
+    }
+  };
   const fullName = [form.firstName, form.middleName, form.lastName].filter(Boolean).join(' ') || staff.name;
   const initials = staff.name.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 
@@ -426,6 +447,7 @@ function EditStaffDialog({ staff, data, dispatch, onClose }) {
     { label: 'Personal' },
     { label: 'Employment' },
     { label: 'Bank & ID' },
+    { label: 'Security' },
   ];
 
   const sel = (k, opts, placeholder) => (
@@ -484,6 +506,43 @@ function EditStaffDialog({ staff, data, dispatch, onClose }) {
       <SH>Identity</SH>
       <FW label="NIN" hint="11 digits"><input value={form.nin} onChange={e => set('nin', e.target.value)} placeholder="12345678901" maxLength={11} style={IST} /></FW>
       <FW label="BVN" hint="11 digits"><input value={form.bvn} onChange={e => set('bvn', e.target.value)} placeholder="12345678901" maxLength={11} style={IST} /></FW>
+    </>,
+
+    /* 3 — Security */
+    <>
+      <SH>Change Password</SH>
+      <FW label="New password" span>
+        <input
+          type="password"
+          value={newPassword}
+          onChange={e => { setNewPassword(e.target.value); setPwError(''); setPwSuccess(false); }}
+          placeholder="Min. 6 characters"
+          style={IST}
+          autoComplete="new-password"
+        />
+      </FW>
+      <FW label="Confirm password" span>
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={e => { setConfirmPassword(e.target.value); setPwError(''); setPwSuccess(false); }}
+          placeholder="Repeat new password"
+          style={IST}
+          autoComplete="new-password"
+        />
+      </FW>
+      <div style={{ gridColumn: '1 / -1', display: 'flex', alignItems: 'center', gap: 12, marginTop: 4 }}>
+        <button
+          className="btn pri"
+          onClick={changePassword}
+          disabled={!newPassword || !confirmPassword || pwSaving}
+          style={{ fontSize: 13 }}
+        >
+          {pwSaving ? 'Changing…' : 'Change password'}
+        </button>
+        {pwError && <span style={{ fontSize: 12, color: 'var(--danger)' }}>{pwError}</span>}
+        {pwSuccess && <span style={{ fontSize: 12, color: 'var(--success)' }}>Password changed successfully.</span>}
+      </div>
     </>,
   ];
 
@@ -567,6 +626,7 @@ function EditStaffDialog({ staff, data, dispatch, onClose }) {
             <button className="btn ghost" onClick={() => setSection(s => Math.min(sections.length - 1, s + 1))} disabled={section === sections.length - 1} style={{ fontSize: 13 }}>
               Next →
             </button>
+
           </div>
 
           {/* step dots */}

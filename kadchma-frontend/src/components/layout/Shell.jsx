@@ -31,7 +31,7 @@ export default function Shell() {
   const [navOpen, setNavOpen] = useState(false);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', overflow: 'hidden' }}>
       <TopBar onMenuToggle={() => setNavOpen(v => !v)} />
 
       {navOpen && (
